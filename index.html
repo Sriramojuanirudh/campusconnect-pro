@@ -1,1 +1,367 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusConnect Pro</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    color: #172554;
+}
+
+header {
+    background: #173b70;
+    color: white;
+    text-align: center;
+    padding: 25px 12px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+main {
+    max-width: 650px;
+    margin: 20px auto;
+    padding: 12px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 12px #0001;
+}
+
+input, select, textarea, button {
+    width: 100%;
+    padding: 12px;
+    margin: 7px 0;
+    border-radius: 7px;
+    font-size: 16px;
+}
+
+input, select, textarea {
+    border: 1px solid #cbd5e1;
+}
+
+button {
+    border: none;
+    background: #1763c6;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #104a96;
+}
+
+.item {
+    border: 1px solid #dbe3ed;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+    overflow-wrap: anywhere;
+}
+
+.badge {
+    background: #dbeafe;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+
+.delete {
+    background: #b42318;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #64748b;
+}
+
+.hidden {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>CampusConnect Pro 🎓</h1>
+    <p>Smart Campus Lost and Found System</p>
+</header>
+
+<main>
+
+<section class="card">
+    <h2>Report an Item</h2>
+
+    <form id="reportForm">
+        <label for="type">Report type</label>
+        <select id="type" required>
+            <option value="Lost">I lost an item</option>
+            <option value="Found">I found an item</option>
+        </select>
+
+        <label for="item">Item name</label>
+        <input id="item" maxlength="80"
+               placeholder="Example: Blue water bottle" required>
+
+        <label for="location">Location</label>
+        <input id="location" maxlength="100"
+               placeholder="Example: College library" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" maxlength="500"
+                  placeholder="Describe the item"></textarea>
+
+        <button type="submit">Submit Report</button>
+    </form>
+</section>
+
+<section class="card">
+    <h2>Search Items 🔍</h2>
+
+    <input id="search"
+           placeholder="Search by item or location">
+
+    <p id="count">0 reports</p>
+    <div id="reports"></div>
+</section>
+
+<section class="card">
+    <h2>Smart Match Suggestions 🤖</h2>
+    <p>Suggestions compare item descriptions and locations.</p>
+    <div id="matches"></div>
+</section>
+
+<section class="card">
+    <h2>About This Project</h2>
+    <p>
+        CampusConnect Pro helps college students report lost
+        belongings and identify possible matches with found items.
+    </p>
+    <p><strong>Technology:</strong> HTML, CSS and JavaScript</p>
+    <p id="mode">Demo mode: reports are saved on this device.</p>
+</section>
+
+</main>
+
+<footer>
+    CampusConnect Pro | Student Project
+</footer>
+
+<script>
+const STORAGE_KEY = "campusconnect_demo_reports";
+
+let reports = [];
+
+try {
+    reports = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+    if (!Array.isArray(reports)) {
+        reports = [];
+    }
+} catch (error) {
+    reports = [];
+}
+
+const form = document.getElementById("reportForm");
+const reportList = document.getElementById("reports");
+const matchList = document.getElementById("matches");
+const search = document.getElementById("search");
+
+function saveReports() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(reports));
+        return true;
+    } catch (error) {
+        alert("Storage is unavailable. Try another browser.");
+        return false;
+    }
+}
+
+function makeElement(tag, text, parent) {
+    const element = document.createElement(tag);
+    element.textContent = text;
+    parent.appendChild(element);
+    return element;
+}
+
+function words(text) {
+    return new Set(
+        text.toLowerCase()
+            .split(/[^a-z0-9]+/)
+            .filter(word => word.length > 1)
+    );
+}
+
+function score(a, b) {
+    if (a.type === b.type) return 0;
+
+    const first = words(a.item + " " + a.description);
+    const second = words(b.item + " " + b.description);
+
+    let common = 0;
+
+    for (const word of first) {
+        if (second.has(word)) common++;
+    }
+
+    const union = new Set([...first, ...second]).size;
+
+    let result = union ? common / union : 0;
+
+    if (a.location.toLowerCase().trim() ===
+        b.location.toLowerCase().trim()) {
+        result += 0.25;
+    }
+
+    if (a.item.toLowerCase().trim() ===
+        b.item.toLowerCase().trim()) {
+        result += 0.35;
+    }
+
+    return Math.min(1, result);
+}
+
+function render() {
+    reportList.replaceChildren();
+    matchList.replaceChildren();
+
+    const query = search.value.trim().toLowerCase();
+
+    const filtered = reports.filter(report =>
+        [report.item, report.location, report.description, report.type]
+            .join(" ").toLowerCase().includes(query)
+    );
+
+    document.getElementById("count").textContent =
+        filtered.length + " reports";
+
+    if (filtered.length === 0) {
+        makeElement("p", "No reports found.", reportList);
+    }
+
+    filtered.forEach(report => {
+        const card = document.createElement("div");
+        card.className = "item";
+
+        makeElement("span", report.type, card).className = "badge";
+        makeElement("h3", report.item, card);
+        makeElement("p", "Location: " + report.location, card);
+
+        if (report.description) {
+            makeElement("p", report.description, card);
+        }
+
+        makeElement("small", "Reported: " + report.date, card);
+
+        const button = makeElement("button", "Delete report", card);
+        button.className = "delete";
+
+        button.addEventListener("click", () => {
+            if (!confirm("Delete this report from this device?")) return;
+
+            reports = reports.filter(item => item.id !== report.id);
+
+            if (saveReports()) render();
+        });
+
+        reportList.appendChild(card);
+    });
+
+    const lost = reports.filter(report => report.type === "Lost");
+    const found = reports.filter(report => report.type === "Found");
+    const suggestions = [];
+
+    lost.forEach(a => {
+        found.forEach(b => {
+            const value = score(a, b);
+
+            if (value >= 0.2) {
+                suggestions.push({a, b, value});
+            }
+        });
+    });
+
+    suggestions.sort((a, b) => b.value - a.value);
+
+    if (!suggestions.length) {
+        makeElement("p",
+            "No possible matches yet. Add Lost and Found reports.",
+            matchList);
+    }
+
+    suggestions.slice(0, 10).forEach(match => {
+        const card = document.createElement("div");
+        card.className = "item";
+
+        makeElement("h3",
+            match.a.item + " ↔ " + match.b.item, card);
+
+        makeElement("p",
+            "Lost location: " + match.a.location, card);
+
+        makeElement("p",
+            "Found location: " + match.b.location, card);
+
+        makeElement("p",
+            "Similarity suggestion: " +
+            Math.round(match.value * 100) + "%", card);
+
+        makeElement("small",
+            "Demo estimate only. Confirm ownership safely.", card);
+
+        matchList.appendChild(card);
+    });
+}
+
+form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const report = {
+        id: Date.now().toString() + Math.random().toString(16).slice(2),
+        type: document.getElementById("type").value,
+        item: document.getElementById("item").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        date: new Date().toLocaleString()
+    };
+
+    if (!report.item || !report.location) {
+        alert("Please enter the item name and location.");
+        return;
+    }
+
+    reports.unshift(report);
+
+    if (saveReports()) {
+        form.reset();
+        render();
+        alert("Report saved on this device!");
+    } else {
+        reports.shift();
+    }
+});
+
+search.addEventListener("input", render);
+
+render();
+</script>
+
+</body>
+  </html>
