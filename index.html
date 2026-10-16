@@ -1,363 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CampusConnect Pro</title>
-
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#12315c"><title>CampusConnect Pro</title>
 <style>
-* {
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: #f0f4f8;
-    margin: 0;
-    color: #172554;
-}
-
-header {
-    background: #173b70;
-    color: white;
-    text-align: center;
-    padding: 25px 12px;
-}
-
-header h1 {
-    margin: 0;
-}
-
-main {
-    max-width: 650px;
-    margin: 20px auto;
-    padding: 12px;
-}
-
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 18px;
-    box-shadow: 0 3px 12px #0001;
-}
-
-input, select, textarea, button {
-    width: 100%;
-    padding: 12px;
-    margin: 7px 0;
-    border-radius: 7px;
-    font-size: 16px;
-}
-
-input, select, textarea {
-    border: 1px solid #cbd5e1;
-}
-
-button {
-    border: none;
-    background: #1763c6;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #104a96;
-}
-
-.item {
-    border: 1px solid #dbe3ed;
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 12px;
-    overflow-wrap: anywhere;
-}
-
-.badge {
-    background: #dbeafe;
-    padding: 5px 8px;
-    border-radius: 5px;
-}
-
-.delete {
-    background: #b42318;
-}
-
-footer {
-    text-align: center;
-    padding: 20px;
-    color: #64748b;
-}
-
-.hidden {
-    display: none;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-    <h1>CampusConnect Pro 🎓</h1>
-    <p>Smart Campus Lost and Found System</p>
-</header>
-
+:root{--navy:#12315c;--blue:#1769d2;--bg:#f3f6fb;--ink:#17243b;--muted:#62738b;--line:#dce4ef}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,Arial,sans-serif}
+header{background:linear-gradient(120deg,#12315c,#1769d2);color:white;padding:22px 16px}header>div,main,footer{max-width:1100px;margin:auto}
+header h1{margin:0;font-size:clamp(24px,4vw,34px)}header p{margin:3px 0;color:#e0ecff}
+main{padding:18px 14px 32px}.card{background:white;border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:16px;box-shadow:0 6px 22px #18385b0b}
+h2{font-size:19px;margin:0 0 12px}.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px}
+label{display:block;font-weight:650;margin:10px 0 5px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:11px;border:1px solid #c7d2e2;border-radius:9px;background:white}textarea{min-height:80px}
+button{border:0;border-radius:9px;padding:10px 13px;background:var(--blue);color:white;font-weight:700;cursor:pointer}button:disabled{opacity:.6}.secondary{background:#e8f0fc;color:#164a91}.danger{background:#b42318}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{background:#e7edf7;color:#243b5b}.tab.active{background:var(--navy);color:white}.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.hidden{display:none!important}.muted,.hint,.small{color:var(--muted)}.hint,.small{font-size:12px}.notice{padding:10px 12px;border-radius:9px;background:#eff6ff;color:#17417d;margin:10px 0;overflow-wrap:anywhere}.error{background:#fff0ef;color:#8b1b13}.success{background:#eaf8ef;color:#17643a}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.stat{border:1px solid var(--line);background:#f8fbff;padding:12px;border-radius:10px}.stat strong{display:block;font-size:24px}.stat span{font-size:12px;color:var(--muted)}
+.item{display:grid;grid-template-columns:90px minmax(0,1fr);gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;margin-top:10px}.item img{width:90px;height:90px;object-fit:cover;background:#edf2f8;border-radius:9px}.item h3{margin:4px 0;overflow-wrap:anywhere}.item p{margin:3px 0;overflow-wrap:anywhere}.pill{display:inline-block;padding:3px 8px;border-radius:20px;background:#fff1d8;color:#815000;font-size:12px;font-weight:750}.pill.found{background:#e4f8ed;color:#14663a}.actions{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}.actions button{font-size:12px;padding:7px 9px}.empty{text-align:center;padding:20px;color:var(--muted);border:1px dashed #c7d2e2;border-radius:10px;margin-top:10px}footer{text-align:center;padding:16px;color:var(--muted)}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.card{padding:14px}.item{grid-template-columns:72px minmax(0,1fr)}.item img{width:72px;height:72px}}@media(max-width:380px){.stats{grid-template-columns:1fr}.row{flex-wrap:wrap}}
+</style></head><body>
+<header><div><h1>🎓 CampusConnect Pro</h1><p>Smart Campus Lost & Found System</p><div class="row"><span id="userLabel">Not signed in</span><button id="logout" class="secondary hidden" type="button">Sign out</button></div></div></header>
 <main>
-
-<section class="card">
-    <h2>Report an Item</h2>
-
-    <form id="reportForm">
-        <label for="type">Report type</label>
-        <select id="type" required>
-            <option value="Lost">I lost an item</option>
-            <option value="Found">I found an item</option>
-        </select>
-
-        <label for="item">Item name</label>
-        <input id="item" maxlength="80"
-               placeholder="Example: Blue water bottle" required>
-
-        <label for="location">Location</label>
-        <input id="location" maxlength="100"
-               placeholder="Example: College library" required>
-
-        <label for="description">Description</label>
-        <textarea id="description" maxlength="500"
-                  placeholder="Describe the item"></textarea>
-
-        <button type="submit">Submit Report</button>
-    </form>
-</section>
-
-<section class="card">
-    <h2>Search Items 🔍</h2>
-
-    <input id="search"
-           placeholder="Search by item or location">
-
-    <p id="count">0 reports</p>
-    <div id="reports"></div>
-</section>
-
-<section class="card">
-    <h2>Smart Match Suggestions 🤖</h2>
-    <p>Suggestions compare item descriptions and locations.</p>
-    <div id="matches"></div>
-</section>
-
-<section class="card">
-    <h2>About This Project</h2>
-    <p>
-        CampusConnect Pro helps college students report lost
-        belongings and identify possible matches with found items.
-    </p>
-    <p><strong>Technology:</strong> HTML, CSS and JavaScript</p>
-    <p id="mode">Demo mode: reports are saved on this device.</p>
-</section>
-
-</main>
-
-<footer>
-    CampusConnect Pro | Student Project
-</footer>
-
+<div id="configError" class="notice error hidden">Supabase configuration is missing. Edit the URL and publishable key in the script at the bottom.</div>
+<section id="auth" class="card" style="max-width:550px;margin:0 auto 16px"><h2>Student account</h2><p class="muted">Log in to view shared reports and publish items.</p>
+<div class="tabs"><button id="loginTab" class="tab active" type="button">Log in</button><button id="signupTab" class="tab" type="button">Create account</button></div>
+<form id="authForm"><label>Email</label><input id="email" type="email" autocomplete="email" required placeholder="you@example.com"><label>Password (minimum 8 characters)</label><input id="password" type="password" minlength="8" required autocomplete="current-password"><button id="authSubmit" type="submit" style="width:100%;margin-top:12px">Log in</button></form><div id="authMsg" class="notice hidden"></div><p class="hint">If email confirmation is enabled in Supabase, confirm your email before logging in.</p></section>
+<div id="app" class="hidden">
+<nav class="tabs"><button class="tab active" data-view="reportsView">Reports</button><button class="tab" data-view="matchesView">Smart matches</button><button id="adminTab" class="tab hidden" data-view="adminView">Admin dashboard</button></nav>
+<section id="reportsView" class="view"><div class="grid">
+<div class="card"><h2>Report an item</h2><form id="reportForm">
+<label>Type</label><select id="type"><option>Lost</option><option>Found</option></select>
+<label>Item name</label><input id="item" maxlength="80" required placeholder="Blue water bottle">
+<label>Location</label><input id="location" maxlength="120" required placeholder="College library">
+<label>Description</label><textarea id="description" maxlength="600" placeholder="Colour, brand, identifying details"></textarea>
+<label>Photo (optional, max 5 MB)</label><input id="photo" type="file" accept="image/jpeg,image/png,image/webp">
+<p class="hint">Use JPEG, PNG, or WebP. Avoid sensitive photos.</p><button id="submitReport" type="submit" style="width:100%">Publish report</button></form><div id="reportMsg" class="notice hidden"></div></div>
+<div class="card"><h2>Shared campus reports</h2><div class="stats"><div class="stat"><strong id="total">0</strong><span>Total</span></div><div class="stat"><strong id="lost">0</strong><span>Lost</span></div><div class="stat"><strong id="found">0</strong><span>Found</span></div></div>
+<div class="row"><input id="search" placeholder="Search item, description, location"><select id="filter"><option>All</option><option>Lost</option><option>Found</option></select></div><div id="reportList"></div></div>
+</div></section>
+<section id="matchesView" class="view hidden card"><h2>🤖 Smart match suggestions</h2><p class="muted">Text similarity is a suggestion, not proof of ownership.</p><div id="matchList"></div></section>
+<section id="adminView" class="view hidden card"><h2>🛡️ Admin dashboard</h2><p class="muted">Only accounts granted the admin role in the database can open this panel.</p><div class="stats"><div class="stat"><strong id="aTotal">0</strong><span>All reports</span></div><div class="stat"><strong id="aLost">0</strong><span>Lost reports</span></div><div class="stat"><strong id="aFound">0</strong><span>Found reports</span></div></div><div id="adminList"></div></section>
+</div></main><footer>CampusConnect Pro · HTML, CSS, JavaScript, Supabase</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const STORAGE_KEY = "campusconnect_demo_reports";
-
-let reports = [];
-
-try {
-    reports = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-
-    if (!Array.isArray(reports)) {
-        reports = [];
-    }
-} catch (error) {
-    reports = [];
-}
-
-const form = document.getElementById("reportForm");
-const reportList = document.getElementById("reports");
-const matchList = document.getElementById("matches");
-const search = document.getElementById("search");
-
-function saveReports() {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(reports));
-        return true;
-    } catch (error) {
-        alert("Storage is unavailable. Try another browser.");
-        return false;
-    }
-}
-
-function makeElement(tag, text, parent) {
-    const element = document.createElement(tag);
-    element.textContent = text;
-    parent.appendChild(element);
-    return element;
-}
-
-function words(text) {
-    return new Set(
-        text.toLowerCase()
-            .split(/[^a-z0-9]+/)
-            .filter(word => word.length > 1)
-    );
-}
-
-function score(a, b) {
-    if (a.type === b.type) return 0;
-
-    const first = words(a.item + " " + a.description);
-    const second = words(b.item + " " + b.description);
-
-    let common = 0;
-
-    for (const word of first) {
-        if (second.has(word)) common++;
-    }
-
-    const union = new Set([...first, ...second]).size;
-
-    let result = union ? common / union : 0;
-
-    if (a.location.toLowerCase().trim() ===
-        b.location.toLowerCase().trim()) {
-        result += 0.25;
-    }
-
-    if (a.item.toLowerCase().trim() ===
-        b.item.toLowerCase().trim()) {
-        result += 0.35;
-    }
-
-    return Math.min(1, result);
-}
-
-function render() {
-    reportList.replaceChildren();
-    matchList.replaceChildren();
-
-    const query = search.value.trim().toLowerCase();
-
-    const filtered = reports.filter(report =>
-        [report.item, report.location, report.description, report.type]
-            .join(" ").toLowerCase().includes(query)
-    );
-
-    document.getElementById("count").textContent =
-        filtered.length + " reports";
-
-    if (filtered.length === 0) {
-        makeElement("p", "No reports found.", reportList);
-    }
-
-    filtered.forEach(report => {
-        const card = document.createElement("div");
-        card.className = "item";
-
-        makeElement("span", report.type, card).className = "badge";
-        makeElement("h3", report.item, card);
-        makeElement("p", "Location: " + report.location, card);
-
-        if (report.description) {
-            makeElement("p", report.description, card);
-        }
-
-        makeElement("small", "Reported: " + report.date, card);
-
-        const button = makeElement("button", "Delete report", card);
-        button.className = "delete";
-
-        button.addEventListener("click", () => {
-            if (!confirm("Delete this report from this device?")) return;
-
-            reports = reports.filter(item => item.id !== report.id);
-
-            if (saveReports()) render();
-        });
-
-        reportList.appendChild(card);
-    });
-
-    const lost = reports.filter(report => report.type === "Lost");
-    const found = reports.filter(report => report.type === "Found");
-    const suggestions = [];
-
-    lost.forEach(a => {
-        found.forEach(b => {
-            const value = score(a, b);
-
-            if (value >= 0.2) {
-                suggestions.push({a, b, value});
-            }
-        });
-    });
-
-    suggestions.sort((a, b) => b.value - a.value);
-
-    if (!suggestions.length) {
-        makeElement("p",
-            "No possible matches yet. Add Lost and Found reports.",
-            matchList);
-    }
-
-    suggestions.slice(0, 10).forEach(match => {
-        const card = document.createElement("div");
-        card.className = "item";
-
-        makeElement("h3",
-            match.a.item + " ↔ " + match.b.item, card);
-
-        makeElement("p",
-            "Lost location: " + match.a.location, card);
-
-        makeElement("p",
-            "Found location: " + match.b.location, card);
-
-        makeElement("p",
-            "Similarity suggestion: " +
-            Math.round(match.value * 100) + "%", card);
-
-        makeElement("small",
-            "Demo estimate only. Confirm ownership safely.", card);
-
-        matchList.appendChild(card);
-    });
-}
-
-form.addEventListener("submit", event => {
-    event.preventDefault();
-
-    const report = {
-        id: Date.now().toString() + Math.random().toString(16).slice(2),
-        type: document.getElementById("type").value,
-        item: document.getElementById("item").value.trim(),
-        location: document.getElementById("location").value.trim(),
-        description: document.getElementById("description").value.trim(),
-        date: new Date().toLocaleString()
-    };
-
-    if (!report.item || !report.location) {
-        alert("Please enter the item name and location.");
-        return;
-    }
-
-   reports.unshift(report);
-
-    if (saveReports()) {
-        form.reset();
-        render();
-        alert("Report saved on this device!");
-    } else {
-        reports.shift();
-    }
-});
-search.addEventListener("input", render);
-render();
-</script>
-</body>
-</html>
+"use strict";
+// Browser-safe project URL and publishable key only. NEVER use service_role/secret keys here.
+const SUPABASE_URL="https://sfezjhzkptyzxwcbckfy.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_LuvWMc1vIh2mJbuN0UYwDQ_nbI6JKfm";
+const BUCKET="item-photos", MAX_BYTES=5*1024*1024;
+const ready=!!(window.supabase && SUPABASE_URL.startsWith("https://") && SUPABASE_PUBLISHABLE_KEY);
+const db=ready?window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY):null;
+let user=null, admin=false, reports=[], mode="login";
+const $=id=>document.getElementById(id);
+function msg(id,text,kind=""){const el=$(id);el.textContent=text;el.className="notice "+kind;el.classList.remove("hidden")}
+function hide(id){$(id).classList.add("hidden")}
+function errText(e){let s=e?.message||String(e);if(/Invalid login credentials/i.test(s))return"Incorrect email or password.";if(/User already registered/i.test(s))return"Account exists; try logging in.";if(/row-level security|permission denied/i.test(s))return"Database permission blocked this action. Check that you ran the SQL setup.";if(/bucket not found/i.test(s))return"Photo bucket is missing. Run the setup SQL.";return s}
+function authMode(m){mode=m;$("loginTab").classList.toggle("active",m==="login");$("signupTab").classList.toggle("active",m==="signup");$("authSubmit").textContent=m==="login"?"Log in":"Create account";$("password").autocomplete=m==="login"?"current-password":"new-password";hide("authMsg")}
+$("loginTab").onclick=()=>authMode("login");$("signupTab").onclick=()=>authMode("signup");
+$("authForm").addEventListener("submit",async e=>{e.preventDefault();if(!db)return msg("authMsg","Supabase is not configured.","error");$("authSubmit").disabled=true;try{let email=$("email").value.trim(),password=$("password").value;if(mode==="signup"){let {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;msg("authMsg",data.session?"Account created and signed in.":"Account created. Check your email for a confirmation link.","success")}else{let {error}=await db.auth.signInWithPassword({email,password});if(error)throw error;msg("authMsg","Logged in.","success")}}catch(e){msg("authMsg",errText(e),"error")}finally{$("authSubmit").disabled=false}});
+$("logout").onclick=async()=>{if(db){let {error}=await db.auth.signOut();if(error)alert(errText(error))}};
+async function checkAdmin(){let {data,error}=await db.from("user_roles").select("role").eq("user_id",user.id).maybeSingle();if(error)console.warn(error.message);return data?.role==="admin"}
+async function sessionChanged(session){user=session?.user||null;admin=false;$("auth").classList.toggle("hidden",!!user);$("app").classList.toggle("hidden",!user);$("logout").classList.toggle("hidden",!user);$("userLabel").textContent=user?user.email:"Not signed in";if(!user){reports=[];renderReports();renderMatches();$("adminTab").classList.add("hidden");return}admin=await checkAdmin();$("adminTab").classList.toggle("hidden",!admin);await loadReports()}
+async function loadReports(){if(!db||!user)return;$("reportList").innerHTML='<div class="empty">Loading…</div>';let {data,error}=await db.from("item_reports").select("id,user_id,type,item,location,description,image_path,created_at").order("created_at",{ascending:false}).limit(500);if(error){reports=[];msg("reportMsg","Load failed: "+errText(error),"error");renderReports();return}reports=data||[];renderReports();renderMatches();if(admin)renderAdmin()}
+function photoURL(path){return path?db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl:""}
+function dateText(v){return new Date(v).toLocaleString()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function cardFor(r){let el=document.createElement("article");el.className="item";let img=document.createElement("img");img.alt="Item photo";img.src=photoURL(r.image_path)||"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Crect width='100%25' height='100%25' fill='%23edf2f8'/%3E%3C/svg%3E";el.append(img);let body=document.createElement("div");body.innerHTML=`<span class="pill ${r.type.toLowerCase()}">${esc(r.type)}</span><h3>${esc(r.item)}</h3><p><b>Location:</b> ${esc(r.location)}</p>${r.description?`<p>${esc(r.description)}</p>`:""}<p class="small">Reported ${esc(dateText(r.created_at))}</p>`;if(admin||r.user_id===user?.id){let actions=document.createElement("div");actions.className="actions";let b=document.createElement("button");b.className="danger";b.textContent=admin?"Moderate / delete":"Delete my report";b.onclick=()=>deleteReport(r);actions.append(b);body.append(actions)}el.append(body);return el}
+function renderReports(){let list=$("reportList");list.replaceChildren();let q=$("search").value.toLowerCase().trim(),f=$("filter").value;let rows=reports.filter(r=>(f==="All"||r.type===f)&&[r.item,r.location,r.description,r.type].join(" ").toLowerCase().includes(q));$("total").textContent=reports.length;$("lost").textContent=reports.filter(r=>r.type==="Lost").length;$("found").textContent=reports.filter(r=>r.type==="Found").length;if(!rows.length){list.innerHTML='<div class="empty">No matching reports. Try another search.</div>';return}rows.forEach(r=>list.append(cardFor(r)))}
+async function deleteReport(r){if(!(admin||r.user_id===user?.id))return alert("Not allowed.");if(!confirm(`Delete "${r.item}"?`))return;let {error}=await db.from("item_reports").delete().eq("id",r.id);if(error)return alert(errText(error));if(r.image_path&&r.user_id===user.id){let res=await db.storage.from(BUCKET).remove([r.image_path]);if(res.error)console.warn(res.error.message)}await loadReports()}
+$("search").addEventListener("input",renderReports);$("filter").addEventListener("change",renderReports);
+$("reportForm").addEventListener("submit",async e=>{e.preventDefault();if(!db||!user)return msg("reportMsg","Log in first.","error");let file=$("photo").files[0];if(file&&!["image/jpeg","image/png","image/webp"].includes(file.type))return msg("reportMsg","Use JPEG, PNG or WebP images.","error");if(file&&file.size>MAX_BYTES)return msg("reportMsg","Image must be 5 MB or smaller.","error");$("submitReport").disabled=true;let path=null;try{if(file){let ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type];path=`${user.id}/${crypto.randomUUID()}.${ext}`;let {error}=await db.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(error)throw error}let {error}=await db.from("item_reports").insert({user_id:user.id,type:$("type").value,item:$("item").value.trim(),location:$("location").value.trim(),description:$("description").value.trim(),image_path:path});if(error){if(path)await db.storage.from(BUCKET).remove([path]);throw error}$("reportForm").reset();msg("reportMsg","Report published to the shared database.","success");await loadReports()}catch(e){msg("reportMsg","Could not publish: "+errText(e),"error")}finally{$("submitReport").disabled=false}});
+const stop=new Set(["the","and","for","with","from","that","this","was","are","has","have","item","found","lost","near","at","in","on","of","a","an","to"]);
+function words(s){return new Set(String(s||"").toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).filter(w=>w.length>1&&!stop.has(w)))}
+function similarity(a,b){let A=words(a.item+" "+a.description),B=words(b.item+" "+b.description),U=new Set([...A,...B]),n=0;for(let w of A)if(B.has(w))n++;let j=U.size?n/U.size:0;let LA=words(a.location),LB=words(b.location),LU=new Set([...LA,...LB]),ln=0;for(let w of LA)if(LB.has(w))ln++;let loc=LU.size?ln/LU.size:0;let exact=a.item.toLowerCase().trim()===b.item.toLowerCase().trim()?0.45:0;let same=a.location.toLowerCase().trim()===b.location.toLowerCase().trim()?0.1:0;return Math.round(Math.min(1,j*.4+loc*.15+exact+same)*100)}
+function renderMatches(){let list=$("matchList");list.replaceChildren();let pairs=[];for(let a of reports.filter(r=>r.type==="Lost"))for(let b of reports.filter(r=>r.type==="Found")){let score=similarity(a,b);if(score>=15)pairs.push({a,b,score})}pairs.sort((a,b)=>b.score-a.score);if(!pairs.length){list.innerHTML='<div class="empty">No likely matches yet. Add both Lost and Found reports.</div>';return}pairs.slice(0,30).forEach(p=>{let c=document.createElement("article");c.className="item";let im=document.createElement("img");im.src=photoURL(p.b.image_path)||"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Crect width='100%25' height='100%25' fill='%23edf2f8'/%3E%3C/svg%3E";im.alt="Found item";c.append(im);let d=document.createElement("div");d.innerHTML=`<span class="pill found">Potential match · ${p.score}%</span><h3>${esc(p.a.item)} ↔ ${esc(p.b.item)}</h3><p><b>Lost:</b> ${esc(p.a.location)}</p><p><b>Found:</b> ${esc(p.b.location)}</p><p class="small">Text-based estimate only; verify ownership safely.</p>`;c.append(d);list.append(c)})}
+function renderAdmin(){if(!admin)return;$("aTotal").textContent=reports.length;$("aLost").textContent=reports.filter(r=>r.type==="Lost").length;$("aFound").textContent=reports.filter(r=>r.type==="Found").length;let list=$("adminList");list.replaceChildren();if(!reports.length){list.innerHTML='<div class="empty">No reports.</div>';return}reports.forEach(r=>list.append(cardFor(r)))}
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.view==="adminView"&&!admin)return alert("Admin access required.");document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));$(b.dataset.view).classList.remove("hidden");document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("active",x===b));if(b.dataset.view==="adminView")renderAdmin()}));
+if(!ready)$("configError").classList.remove("hidden");
+if(db){db.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>sessionChanged(session).catch(e=>console.error(e)),0)});db.auth.getSession().then(({data})=>sessionChanged(data.session)).catch(e=>msg("authMsg",errText(e),"error"))}
+</script></body></html>
